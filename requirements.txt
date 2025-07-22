@@ -12,6 +12,7 @@ django-bootstrap-v5==1.0.11
 django-bootstrap5==25.1
 django-cors-headers==4.7.0
 djangorestframework==3.16.0
+gunicorn==23.0.0
 h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
@@ -38,5 +39,6 @@ typing_extensions==4.13.0
 urllib3==2.4.0
 webdriver-manager==4.0.2
 websocket-client==1.8.0
+whitenoise==6.9.0
 wsproto==1.2.0
 youtube-transcript-api==1.1.1
