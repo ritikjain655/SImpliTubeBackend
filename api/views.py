@@ -5,6 +5,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import random
 
 load_dotenv()
 
@@ -46,9 +47,8 @@ def quizai(transcript_text):
             {"role": "user", "content": transcript_text},
         ],
     )
-    print(completion)
     return completion.choices[0].message.content
-    
+
 def extract_video_id(url):
     patterns = [
         "https://www.youtube.com/watch?v=",
@@ -60,6 +60,19 @@ def extract_video_id(url):
         if url.startswith(pattern):
             return url.replace(pattern, "")
     return None
+
+proxy_list = [
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10000",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10006",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10010",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10013",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10019",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10021",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10025",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10034",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10038",
+    "hxLHJB4jTe2DAto:Ycs4J5SAPSBx1L9@146.70.146.102:10039",
+]
 
 @csrf_exempt
 def generate_content(request):
@@ -73,11 +86,14 @@ def generate_content(request):
             if not video_id:
                 return JsonResponse({"error": "Invalid YouTube URL"}, status=400)
 
-            proxies = {
-                'https': '219.65.73.81:80',
-            }
+            chosen_proxy = random.choice(proxy_list)
+            proxy_url = f"http://{chosen_proxy}"
+            transcript = YouTubeTranscriptApi.get_transcript(
+                video_id,
+                languages=['en', 'en-GB'],
+                proxies={'https': proxy_url}
+            )
 
-            transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-GB'])
             transcript_text = "\n".join([entry['text'] for entry in transcript])
 
             if option == 1:
