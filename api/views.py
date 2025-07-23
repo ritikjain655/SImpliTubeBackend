@@ -73,7 +73,9 @@ def generate_content(request):
             if not video_id:
                 return JsonResponse({"error": "Invalid YouTube URL"}, status=400)
 
-            
+            proxies = {
+                'https': '219.65.73.81:80',
+            }
 
             transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-GB'])
             transcript_text = "\n".join([entry['text'] for entry in transcript])
