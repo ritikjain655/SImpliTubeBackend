@@ -50,15 +50,18 @@ def quizai(transcript_text):
     return completion.choices[0].message.content
 
 def extract_video_id(url):
-    patterns = [
-        "https://www.youtube.com/watch?v=",
-        "http://www.youtube.com/watch?v=",
-        "www.youtube.com/watch?v=",
-        "youtube.com/watch?v=",
-    ]
-    for pattern in patterns:
-        if url.startswith(pattern):
-            return url.replace(pattern, "")
+    if "youtube.com/watch?v=" in url:
+        url = url.split("v=")[1]
+        if "&" in url:
+            url = url.split("&")[0]
+        return url
+
+    elif "youtu.be/" in url:
+        url = url.split(".be/")[1]
+        if "?" in url:
+            url = url.split("?")[0]
+        return url
+
     return None
 
 proxy_list = [
@@ -96,6 +99,12 @@ def generate_content(request):
 
             transcript_text = "\n".join([entry['text'] for entry in transcript])
 
+            if len(transcript_text) >= 20000:
+                return JsonResponse(
+        {"success": False, "error": "We don't support videos of this length"},
+        status=400
+    )
+
             if option == 1:
                 result = summaryai(transcript_text)
             elif option == 2:
@@ -110,3 +119,7 @@ def generate_content(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"message": "Only POST method allowed"}, status=405)
+
+
+def isallwell(request):
+    return JsonResponse({"status": "ok"})
