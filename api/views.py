@@ -6,7 +6,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import random
-
+from django.views.decorators.http import require_GET
 load_dotenv()
 
 def get_openai_client():
@@ -120,6 +120,6 @@ def generate_content(request):
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"message": "Only POST method allowed"}, status=405)
 
-
+@require_GET
 def isallwell(request):
     return JsonResponse({"status": "ok"})
