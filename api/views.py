@@ -65,17 +65,19 @@ def extract_video_id(url):
     return None
 
 proxy_list = [
-    "23.95.150.145:6114:xkruocsa:kjjvz8xrd626",
-"198.23.239.134:6540:xkruocsa:kjjvz8xrd626,
-"45.38.107.97:6014:xkruocsa:kjjvz8xrd626,
-"107.172.163.27:6543:xkruocsa:kjjvz8xrd626,
-"64.137.96.74:6641:xkruocsa:kjjvz8xrd626,
-"45.43.186.39:6257:xkruocsa:kjjvz8xrd626,
-"154.203.43.247:5536:xkruocsa:kjjvz8xrd626,
-"216.10.27.159:6837:xkruocsa:kjjvz8xrd626,
-"136.0.207.84:6661:xkruocsa:kjjvz8xrd626,
-"142.147.128.93:6593:xkruocsa:kjjvz8xrd626,
+"23.95.150.145:6114",
+"198.23.239.134:6540",
+"45.38.107.97:6014",
+"107.172.163.27:6543",
+"64.137.96.74:6641",
+"45.43.186.39:6257",
+"154.203.43.247:5536",
+"216.10.27.159:6837",
+"136.0.207.84:6661",
+"142.147.128.93:6593"
+
 ]
+
 
 @csrf_exempt
 def generate_content(request):
