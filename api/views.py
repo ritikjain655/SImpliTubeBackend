@@ -65,17 +65,16 @@ def extract_video_id(url):
     return None
 
 proxy_list = [
-"23.95.150.145:6114",
-"198.23.239.134:6540",
-"45.38.107.97:6014",
-"107.172.163.27:6543",
-"64.137.96.74:6641",
-"45.43.186.39:6257",
-"154.203.43.247:5536",
-"216.10.27.159:6837",
-"136.0.207.84:6661",
-"142.147.128.93:6593"
-
+    "23.95.150.145:6114:xkruocsa:kjjvz8xrd626",
+    "198.23.239.134:6540:xkruocsa:kjjvz8xrd626",
+    "45.38.107.97:6014:xkruocsa:kjjvz8xrd626",
+    "107.172.163.27:6543:xkruocsa:kjjvz8xrd626",
+    "64.137.96.74:6641:xkruocsa:kjjvz8xrd626",
+    "45.43.186.39:6257:xkruocsa:kjjvz8xrd626",
+    "154.203.43.247:5536:xkruocsa:kjjvz8xrd626",
+    "216.10.27.159:6837:xkruocsa:kjjvz8xrd626",
+    "136.0.207.84:6661:xkruocsa:kjjvz8xrd626",
+    "142.147.128.93:6593:xkruocsa:kjjvz8xrd626",
 ]
 
 
@@ -91,21 +90,25 @@ def generate_content(request):
             if not video_id:
                 return JsonResponse({"error": "Invalid YouTube URL"}, status=400)
 
+            # ✅ Proxy handling updated
             chosen_proxy = random.choice(proxy_list)
-            proxy_url = f"http://{chosen_proxy}"
+            ip, port, user, pwd = chosen_proxy.split(":")
+            proxy_url = f"http://{user}:{pwd}@{ip}:{port}"
+            proxies = {"http": proxy_url, "https": proxy_url}
+
             transcript = YouTubeTranscriptApi.get_transcript(
                 video_id,
                 languages=['en', 'en-GB'],
-                proxies={'https': proxy_url}
+                proxies=proxies
             )
 
             transcript_text = "\n".join([entry['text'] for entry in transcript])
 
             if len(transcript_text) >= 20000:
                 return JsonResponse(
-        {"success": False, "error": "We don't support videos of this length"},
-        status=400
-    )
+                    {"success": False, "error": "We don't support videos of this length"},
+                    status=400
+                )
 
             if option == 1:
                 result = summaryai(transcript_text)
